@@ -13,22 +13,26 @@ args = parser.parse_args()
 
 match, words, store_result, result, content, guess, guessmatch, = ([] for c in range(7))
 tab = bestmatch = 0
+#Requires dictionary file at the below path to be able to make guesses at possible ROT decoding solutions
 dictionary="./dictionary.txt"
 answer=""
 
+#function to rotate through a string of characters
 def rotate(strg,n):
     return strg[n:] + strg[:n]
 
 ualpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 lalpha="abcdefghijklmnopqrstuvwxyz"
 
-
+#function to use regex to see if some string has the same character set as base64
 def b64match(strg, search=re.compile(r'[^A-Za-z0-9\+\/=]').search):
     return not bool(search(strg))
 
+#function to use regex to see if some string has the same character set as URL encoding
 def urlmatch(strg, search=re.compile('[^%A-Za-z0-9]').search):
     return not bool(search(strg))
 
+#Load Dictionary file
 with open(dictionary) as dic:
     content = dic.readlines()
 content = [j.strip() for j in content]
@@ -37,8 +41,10 @@ y=args.TEXT.strip()
 
 print "\nOriginal Text: \n\n" + y
 
+#loop so when the script is run without args it can try to do multiple decodings in repition. 
 while answer != "done":
-    
+
+#makes a list of items that make up the string and compares them to the dictionary    
     dtest=y.split()
         
     for i in range (0,len(dtest)):
@@ -58,6 +64,7 @@ while answer != "done":
 
     print "\nAlphabet: ",
 
+#create a python dictionary of all of the characters that make up the character set and their number of occurances    
     for x in range(0, len(unique)):
         print unique[x] + " ",
         count=0
@@ -79,6 +86,7 @@ while answer != "done":
 
     print '\n'
 
+#if statements to guess the type of encoding based on character set and some simple math - args bypass these checks
 
     if (len(y) % 4 == 0 and b64match(y) == 1) or args.base64:
         print "Mathematically and based on the character-set this could be base64 encoded.  Attempting decoding:\n"
@@ -138,8 +146,9 @@ while answer != "done":
            matches = ' '.join(str(q) for q in guessmatch)
            print "Matching Words: " + matches + "\n"
            answer = "done"
+        if args.ROTdecode:
+           quit()        
     else:
         print "No guess\n"
         answer = "done"
-    if args.ROTdecode:
-        quit()    
+   
