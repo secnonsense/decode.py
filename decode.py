@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 match, words, store_result, result, content, guess, guessmatch, = ([] for c in range(7))
 tab = bestmatch = 0
-#Requires dictionary file at the below path to be able to make guesses at possible ROT decoding solutions
+#Requires dictionary file at the below path to be able to make guesses at possible ROT decoding solutions - available in repo
 dictionary="./dictionary.txt"
 answer=""
 
